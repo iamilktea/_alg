@@ -1,9 +1,17 @@
-經典演算法與函數式程式設計解答
+# 經典演算法與函數式程式設計解答
+
 這份文件收錄了三個經典計算機科學問題的 Python 實作，包含「河內塔問題（遞迴與非遞迴）」、「符號數學式微分（遞迴）」以及「無迴圈版本的函數式泡沫排序」。
-一、 河內塔問題 (Tower of Hanoi)
-河內塔可以利用遞迴（Top-down 思考）與非遞迴（利用 Stack 模擬系統呼叫堆疊）兩種方式來解決。
-1. 遞迴解法
-這是最直覺的解法。將  個盤子先移到暫存柱，把最底下的最大盤移到目標柱，再將  個盤子移到目標柱。
+
+---
+
+## 一、 河內塔問題 (Tower of Hanoi)
+
+河內塔可以利用**遞迴**（Top-down 思考）與**非遞迴**（利用 Stack 模擬系統呼叫堆疊）兩種方式來解決。
+
+### 1. 遞迴解法
+這是最直覺的解法。將 $n-1$ 個盤子先移到暫存柱，把最底下的最大盤移到目標柱，再將 $n-1$ 個盤子移到目標柱。
+
+```python
 def hanoi_recursive(n, source, target, auxiliary):
     """遞迴版本的河內塔"""
     if n > 0:
@@ -15,10 +23,12 @@ def hanoi_recursive(n, source, target, auxiliary):
 
 # 測試範例
 # hanoi_recursive(3, 'A', 'C', 'B')
+```
 
-
-2. 禁止遞迴解法 (使用 Stack 堆疊)
+### 2. 禁止遞迴解法 (使用 Stack 堆疊)
 我們可以使用自訂的 Stack (陣列) 來手動模擬遞迴時的系統堆疊狀態，完全避免呼叫自身的遞迴行為。
+
+```python
 def hanoi_iterative(n, source, target, auxiliary):
     """禁止遞迴，使用 Stack 模擬的河內塔"""
     # stack 儲存狀態：(盤子數量, 來源, 目標, 暫存, 是否已準備好移動最大盤)
@@ -42,10 +52,15 @@ def hanoi_iterative(n, source, target, auxiliary):
 
 # 測試範例
 # hanoi_iterative(3, 'A', 'C', 'B')
+```
 
+---
 
-二、 符號數學式微分 (Symbolic Differentiation)
-我們可以使用抽象語法樹 (AST) 的概念，將數學式表示為 Tuple 結構。例如 ('add', ('var', 'x'), ('num', 3)) 代表 。接著運用遞迴實作微積分的基本法則（常數法則、加法法則、乘法法則等）。
+## 二、 符號數學式微分 (Symbolic Differentiation)
+
+我們可以使用抽象語法樹 (AST) 的概念，將數學式表示為 Tuple 結構。例如 `('add', ('var', 'x'), ('num', 3))` 代表 $x + 3$。接著運用遞迴實作微積分的基本法則（常數法則、加法法則、乘法法則等）。
+
+```python
 def sym_diff(expr, var='x'):
     """
     對符號表達式進行微分
@@ -90,11 +105,17 @@ print("原始算式 AST:", expression)
 print("微分結果 AST:", derivative)
 # 輸出結果會是 ('add', ('add', ('mul', ('num', 1), ('var', 'x')), ('mul', ('var', 'x'), ('num', 1))), ('num', 0))
 # 也就是 (1*x + x*1) + 0 = 2x
+```
 
+---
 
-三、 禁止使用迴圈的「函數式泡沫排序」
-要完全禁止 for 和 while 迴圈，必須依賴遞迴 (Recursion) 來實作高階函數 map、filter 與 reduce，然後利用自製的 reduce 來完成泡沫排序中的「兩兩交換過程」。
-1. 自製無迴圈的 Map, Filter, Reduce
+## 三、 禁止使用迴圈的「函數式泡沫排序」
+
+要完全禁止 `for` 和 `while` 迴圈，必須依賴**遞迴 (Recursion)** 來實作高階函數 `map`、`filter` 與 `reduce`，然後利用自製的 `reduce` 來完成泡沫排序中的「兩兩交換過程」。
+
+### 1. 自製無迴圈的 Map, Filter, Reduce
+
+```python
 def my_map(func, lst):
     """無迴圈 map"""
     if not lst:
@@ -115,10 +136,13 @@ def my_reduce(func, lst, initial=None):
     if initial is None:
         return my_reduce(func, lst[1:], lst[0])
     return my_reduce(func, lst[1:], func(initial, lst[0]))
+```
 
+### 2. 利用 Reduce 實作無迴圈的泡沫排序 (Bubble Sort)
 
-2. 利用 Reduce 實作無迴圈的泡沫排序 (Bubble Sort)
-泡沫排序的核心是一次「掃描 (Pass)」，將最大的元素像泡泡一樣推到陣列最末端。我們可以用 my_reduce 完成一次掃描，並用遞迴控制總共需要的掃描次數。
+泡沫排序的核心是一次「掃描 (Pass)」，將最大的元素像泡泡一樣推到陣列最末端。我們可以用 `my_reduce` 完成一次掃描，並用遞迴控制總共需要的掃描次數。
+
+```python
 def single_bubble_pass(lst):
     """使用 reduce 完成單次泡沫掃描，將最大值推到最後面"""
     def swap_reducer(acc, curr):
@@ -159,6 +183,4 @@ def bubble_sort_functional(lst, n=None):
 # unordered_list = [5, 1, 4, 2, 8]
 # sorted_list = bubble_sort_functional(unordered_list)
 # print("排序結果:", sorted_list)  # 輸出: [1, 2, 4, 5, 8]
-
-
-
+```
