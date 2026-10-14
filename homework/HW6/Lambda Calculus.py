@@ -197,6 +197,39 @@ def eval_step(node):
 
     return node, False
 
+# 1. 定義預設函式庫
+STANDARD_LIBRARY = """
+-- Church Booleans
+let true  = \\x. \\y. x
+let false = \\x. \\y. y
+let if    = \\p. \\a. \\b. p a b
+let and   = \\p. \\q. p q false
+let or    = \\p. \\q. p true q
+let not   = \\p. p false true
+
+-- Church Numerals
+let zero  = \\f. \\x. x
+let one   = \\f. \\x. f x
+let two   = \\f. \\x. f (f x)
+let three = \\f. \\x. f (f (f x))
+
+-- Arithmetic
+let succ  = \\n. \\f. \\x. f (n f x)
+let plus  = \\m. \\n. m succ n
+let mult  = \\m. \\n. \\f. m (n f)
+let iszero = \\n. n (\\x. false) true
+
+-- Recursion
+let z     = \\f. (\\x. f (\\v. x x v)) (\\x. f (\\v. x x v))
+"""
+
+def run_interpreter_with_stdlib(user_code, max_steps=100):
+    # 將預設函式庫與使用者的程式碼拼接
+    full_code = STANDARD_LIBRARY + "\n" + user_code
+    
+    # 呼叫原本的解譯器執行
+    run_interpreter(full_code, max_steps)
+
 def run_interpreter(code, max_steps=100):
     """解譯器執行入口，印出步驟"""
     print("=" * 60)
