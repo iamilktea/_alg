@@ -1,6 +1,6 @@
-# Lambda Calculus 解譯器開發與說明文件
+# Lambda Calculus 解譯器與說明
 
-本專案是一個用 Python 實作的 **Lambda Calculus 解譯器（Interpreter）**。該解譯器具備完整的 **Lexer（詞法分析）**、**Parser（語法解析）** 與 **Evaluator（求值引擎）**，支援自訂名稱綁定（`let` 語法），並能**一步步印出完整的 $\beta$-歸約（$\beta$-reduction）計算過程**。
+本專案是一個用 Python 實作的 **Lambda Calculus 解譯器**。該解譯器具備完整的 **Lexer（詞法分析）**、**Parser（語法解析）** 與 **Evaluator（求值引擎）**，支援自訂名稱綁定（`let` 語法），並能**一步步印出完整的 $\beta$-歸約（$\beta$-reduction）計算過程**。
 
 ---
 
